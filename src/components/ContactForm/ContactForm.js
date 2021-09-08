@@ -1,25 +1,25 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import React from 'react';
+import { connect } from 'react-redux';
+
 import style from './ContactForm.module.css';
+import 'react-toastify/dist/ReactToastify.css';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import { connect } from 'react-redux';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-import contactsActions from '../../redux/contactsItems/contacts-actions';
+import contactsOperation from '../../redux/contactsItems/contacts-operation';
 
 function ContactForm({ contacts, onSubmit }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
   const handleInputOnChange = event => {
-    switch (event.target.name) {
+    switch (event.currentTarget.name) {
       case 'name':
-        setName(event.target.value);
+        setName(event.currentTarget.value);
         break;
       case 'number':
-        setNumber(event.target.value);
+        setNumber(event.currentTarget.value);
         break;
       default:
         return;
@@ -29,23 +29,24 @@ function ContactForm({ contacts, onSubmit }) {
   const onSubmitHandler = e => {
     e.preventDefault();
 
+    const normalizedName = name.toLowerCase();
+    const nameInContacts = contacts.find(
+      contact => contact.name === normalizedName,
+    );
+    const numberInContacts = contacts.find(
+      contact => contact.number === number,
+    );
+
     if (e.currentTarget.name === '') {
       toast.info('Fill in the input fields name and number!');
       return;
     }
-
-    if (
-      contacts.some(
-        contact => contact.name.toLowerCase() === name.toLowerCase(),
-      )
-    ) {
-      toast.warn(`${name} is already in phonebook !`);
+    if (!nameInContacts && !numberInContacts) {
+      onSubmit(normalizedName, number);
+      reset();
       return;
     }
-
-    onSubmit({ name, number });
-
-    reset();
+    toast.warn(`${name} is already in phonebook !`);
   };
 
   const reset = () => {
@@ -96,7 +97,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onSubmit: (name, number) =>
-    dispatch(contactsActions.addContacts(name, number)),
+    dispatch(contactsOperation.addContact(name, number)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

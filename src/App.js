@@ -1,12 +1,21 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import './App.css';
 import ContactForm from './components/ContactForm';
+import { contactsOperations } from './redux/contactsItems';
 import ContactList from './components/ContactList';
 import Filter from './components/Filter';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(contactsOperations.fetchContacts());
+  }, [dispatch]);
+
   return (
     <div className="Container">
       <h1>Phonebook</h1>
