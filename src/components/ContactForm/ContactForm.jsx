@@ -7,23 +7,24 @@ import style from './ContactForm.module.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import contactsOperation from '../../redux/contactsItems/contacts-operation';
+import { contactsOperations, contactsSelectors } from '../../redux/contacts';
+
+const initialState = {
+  name: '',
+  number: '',
+};
 
 function ContactForm({ contacts, onSubmit }) {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [state, setState] = useState(initialState);
+  const { name, number } = state;
 
   const handleInputOnChange = event => {
-    switch (event.currentTarget.name) {
-      case 'name':
-        setName(event.currentTarget.value);
-        break;
-      case 'number':
-        setNumber(event.currentTarget.value);
-        break;
-      default:
-        return;
-    }
+    const { name, value } = event.currentTarget;
+
+    setState(prev => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const onSubmitHandler = e => {
@@ -50,8 +51,7 @@ function ContactForm({ contacts, onSubmit }) {
   };
 
   const reset = () => {
-    setName('');
-    setNumber('');
+    setState(initialState);
   };
 
   return (
@@ -92,12 +92,12 @@ function ContactForm({ contacts, onSubmit }) {
 }
 
 const mapStateToProps = state => ({
-  contacts: state.contacts.items,
+  contacts: contactsSelectors.getContacts(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   onSubmit: (name, number) =>
-    dispatch(contactsOperation.addContact(name, number)),
+    dispatch(contactsOperations.addContact(name, number)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

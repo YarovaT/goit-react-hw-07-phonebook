@@ -9,12 +9,13 @@ import logger from 'redux-logger';
 //   REGISTER,
 // } from 'redux-persist';
 
-import contactsReducer from '../redux/contactsItems/contacts-reducer';
+import { contactsReducer } from './contacts';
 
 const middleware = [
   ...getDefaultMiddleware({
     serializableCheck: false,
   }),
+
   logger,
 ];
 

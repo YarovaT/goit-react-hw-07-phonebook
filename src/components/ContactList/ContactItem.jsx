@@ -4,6 +4,8 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import style from './ContactList.module.css';
+
 const useStyles = makeStyles({
   root: {
     background: 'grey',
@@ -20,8 +22,10 @@ const ContactItem = ({ name, number, onClick }) => {
   const classes = useStyles();
 
   return (
-    <>
-      {name}: {number}
+    <li className={style.listItem}>
+      <span>{name}</span>
+      <a href={`tel:${number}`}>{number}</a>
+
       <Button
         type="button"
         variant="contained"
@@ -32,7 +36,7 @@ const ContactItem = ({ name, number, onClick }) => {
       >
         Delete
       </Button>
-    </>
+    </li>
   );
 };
 

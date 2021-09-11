@@ -1,15 +1,19 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import './App.css';
 import ContactForm from './components/ContactForm';
-import { contactsOperations } from './redux/contactsItems';
+import { contactsOperations, contactsSelectors } from './redux/contacts';
 import ContactList from './components/ContactList';
 import Filter from './components/Filter';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
 function App() {
+  const isLoadingContacts = useSelector(state =>
+    contactsSelectors.getLoading(state),
+  );
+  const isError = useSelector(state => contactsSelectors.getError(state));
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,6 +30,9 @@ function App() {
       <h2>Contacts</h2>
 
       <ContactList />
+
+      {isLoadingContacts}
+      {isError}
 
       <ToastContainer
         position="top-center"

@@ -3,10 +3,12 @@ import { createSelector } from '@reduxjs/toolkit'; // Импорт функци�
 const getContacts = state => state.contacts.items;
 const getFilter = state => state.contacts.filter;
 const getLoading = state => state.contacts.loading;
+const getError = state => state.contacts.error;
 
 // Мемоизация функции фильтра контактов на базе композитного селектора
 const getfilteredContacts = createSelector(
   [getContacts, getFilter],
+
   (contacts, filter) => {
     const normalizedFilter = filter.toLowerCase();
 
@@ -21,5 +23,6 @@ export default {
   getContacts,
   getFilter,
   getLoading,
+  getError,
   getfilteredContacts,
 };
